@@ -4,7 +4,7 @@ class Koneksi
     private $host = 'localhost';
     private $username = 'root';
     private $password = '';
-    private $database = 'db_apriori';
+    private $database = 'db_regresi_linear';
 
     private $koneksi;
     public function __construct()

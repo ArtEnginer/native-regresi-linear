@@ -3,10 +3,10 @@
 <?php echo $data['title'] ?>
 <div class="card">
     <div class="card-header">
-        <a href="<?= base_url() ?>transaksi/tambah" class="btn btn-primary btn-sm">
+        <a href="<?= base_url() ?>dataset/tambah" class="btn btn-primary btn-sm">
             <i class="fa fa-plus"></i></a>
 
-        <a href="<?= base_url() ?>transaksi/import" class="btn btn-success btn-sm">
+        <a href="<?= base_url() ?>dataset/import" class="btn btn-success btn-sm">
             <i class="fa fa-file-excel"></i></a>
     </div>
     <div class="card-body">
@@ -15,8 +15,8 @@
                 <thead>
                     <tr>
                         <th width="2px">No</th>
-                        <th>Nama</th>
-                        <th>Jumlah</th>
+                        <th>X</th>
+                        <th>Y</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -25,13 +25,13 @@
                     foreach ($data['items'] as $item) : ?>
                         <tr>
                             <td><?= $no++ ?></td>
-                            <td><?= $item['nama'] ?></td>
-                            <td><?= $item['jumlah'] ?></td>
+                            <td><?= $item['x'] ?></td>
+                            <td><?= $item['y'] ?></td>
                             <td>
-                                <a href="<?= base_url() ?>transaksi/edit?id=<?= $item['id'] ?>" class="btn btn-warning btn-sm text-white">
+                                <a href="<?= base_url() ?>dataset/edit?id=<?= $item['id'] ?>" class="btn btn-warning btn-sm text-white">
                                     <i class="fa fa-edit"></i></a>
                                 </a>
-                                <a href="<?= base_url() ?>transaksi/delete?id=<?= $item['id'] ?>" class="btn btn-danger btn-sm text-white">
+                                <a href="<?= base_url() ?>dataset/delete?id=<?= $item['id'] ?>" class="btn btn-danger btn-sm text-white">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </td>

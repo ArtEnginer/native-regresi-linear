@@ -6,15 +6,15 @@
         <div class="card">
             <div class="card-body">
 
-                <form action="<?= base_url() ?>transaksi/update" method="POST">
+                <form action="<?= base_url() ?>dataset/update" method="POST">
                     <input type="hidden" name="id" value="<?= $data['item']['id'] ?>">
                     <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" name="nama" id="nama" class="form-control" value="<?= $data['item']['nama'] ?>">
+                        <label for="x">Tanggal (x)</label>
+                        <input type="text" name="x" id="x" class="form-control" value="<?= $data['item']['x'] ?>">
                     </div>
                     <div class="form-group">
-                        <label for="jumlah">Jumlah</label>
-                        <input type="number" name="jumlah" id="jumlah" class="form-control" value="<?= $data['item']['jumlah'] ?>">
+                        <label for="y">Jumlah (y)</label>
+                        <input type="number" name="y" id="y" class="form-control" value="<?= $data['item']['y'] ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>

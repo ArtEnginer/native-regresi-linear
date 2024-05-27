@@ -6,14 +6,14 @@
         <div class="card">
             <div class="card-body">
 
-                <form action="<?= base_url() ?>transaksi/simpan" method="POST">
+                <form action="<?= base_url() ?>dataset/simpan" method="POST">
                     <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" name="nama" id="nama" class="form-control">
+                        <label for="x">Tanggal (x)</label>
+                        <input type="date" name="x" id="x" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="jumlah">Jumlah</label>
-                        <input type="number" name="jumlah" id="jumlah" class="form-control">
+                        <label for="y">Jumlah (y)</label>
+                        <input type="number" name="y" id="y" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
