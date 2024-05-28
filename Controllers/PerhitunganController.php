@@ -91,17 +91,19 @@ class PerhitunganController
                 $dataset[$bulan_tahun] = array(
                     'bulan_tahun' => $bulan_tahun,
                     'periode' => $index,
-                    'total' => $item['y'], // Initialize total with the first value of 'y'
-                    'x_kuadrat' => $index * $index,
-                    'x' => $index,
                     'y' => $item['y'],
-                    'xy' => $index * $item['y'],
+                    'x' => $index,
+                    'x_kuadrat' => pow($index, 2),
+                    'xy' => $index * $item['y']
+
                 );
                 $index++;
             } else {
-                $dataset[$bulan_tahun]['total'] += $item['y'];
+                $dataset[$bulan_tahun]['y'] += $item['y'];
+                $dataset[$bulan_tahun]['xy'] = $dataset[$bulan_tahun]['x'] * $dataset[$bulan_tahun]['y'];
             }
         }
+
 
         // Linear regression calculation
         $n = count($dataset);
@@ -111,7 +113,7 @@ class PerhitunganController
         $total_x_kuadrat = 0;
 
         foreach ($dataset as $item) {
-            $total_x += $item['x'];
+            $total_x += $item['periode'];
             $total_y += $item['y'];
             $total_xy += $item['xy'];
             $total_x_kuadrat += $item['x_kuadrat'];

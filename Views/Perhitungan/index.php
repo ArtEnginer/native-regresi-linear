@@ -82,8 +82,8 @@
                                     <tr>
                                         <td><?= $no++ ?></td>
                                         <td><?= $bulan_tahun ?></td>
-                                        <td><?= $nilai['periode'] ?></td>
-                                        <td><?= $nilai['total'] ?></td>
+                                        <td><?= $nilai['x'] ?></td>
+                                        <td><?= $nilai['y'] ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
