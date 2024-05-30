@@ -1,6 +1,6 @@
 <ul class="app-menu list-unstyled accordion" id="menu-accordion">
 
-    <?php if ($_SESSION['user']['role'] == 'admin') : ?>
+    <?php if ($_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'user') : ?>
         <li class="nav-item">
             <a class="nav-link <?= $data['active'] == 'home' ? 'active' : '' ?>" href="<?= base_url() ?>home/index">
                 <span class="nav-icon">
@@ -67,7 +67,7 @@
             </a>
         </li>
     <?php endif; ?>
-    <?php if ($_SESSION['user']['role'] == 'user') : ?>
+    <?php if ($_SESSION['user']['role'] == 'admin') : ?>
 
         <li class="nav-item">
             <a class="nav-link <?= ($active == "users") ? "active" : ""; ?> ?>" href="<?= base_url() ?>user/index">
