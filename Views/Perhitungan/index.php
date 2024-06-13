@@ -1,7 +1,7 @@
 <?php require_once("Views/Layout/index.php"); ?>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="app-card shadow-sm mb-4 border-left-decoration">
             <div class="inner">
                 <div class="app-card-header p-4">
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="app-card shadow-sm mb-4 border-left-decoration">
             <div class="inner">
                 <div class="app-card-header p-4">
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="app-card shadow-sm mb-4 border-left-decoration">
             <div class="inner">
                 <div class="app-card-header p-4">

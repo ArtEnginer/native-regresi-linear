@@ -79,6 +79,8 @@
 
 <body>
     <div class="login-container">
+        <!-- logo image -->
+        <img src="<?= base_url() . '/assets/images/logo.png' ?>" alt="logo" width="100">
         <h2>Login</h2>
         <form action="" method="post">
             <label for="username">Username:</label>
