@@ -47,23 +47,25 @@
                                     <tr>
                                         <th width="2px">No</th>
                                         <th>Bulan/Tahun</th>
-                                        <th>x</th>
-                                        <th>y</th>
+                                        <?php for ($i = 1; $i <= 9; $i++) : ?>
+                                            <th>GOL <?= $i ?></th>
+                                        <?php endfor; ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $no = 1;
-                                    foreach ($data['pengujian']['dataTest'] as $bulan_tahun => $nilai) : ?>
-
+                                    <?php $no = 1; ?>
+                                    <?php foreach ($data['pengujian']['dataTest'] as $bulan_tahun => $nilai) : ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
                                             <td><?= $nilai['bulan_tahun'] ?></td>
-                                            <td><?= $nilai['x'] ?></td>
-                                            <td><?= $nilai['y'] ?></td>
+                                            <?php for ($i = 1; $i <= 9; $i++) : ?>
+                                                <td><?= $nilai['y' . $i] ?></td>
+                                            <?php endfor; ?>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>
@@ -84,28 +86,9 @@
                     </div>
                     <div class="app-card-body p-4">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered datatable">
-                                <thead>
-                                    <tr>
-                                        <th width="2px">No</th>
-                                        <th>Periode</th>
-                                        <th>Actual</th>
-                                        <th>Prediction</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $no = 1;
-                                    foreach ($data['pengujian']['results'] as $bulan_tahun => $nilai) : ?>
 
-                                        <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $nilai['periode'] ?></td>
-                                            <td><?= $nilai['actual'] ?></td>
-                                            <td><?= $nilai['prediction'] ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                            <?= $data['pengujian']['prediksi'] ?>
+
                         </div>
                     </div>
                 </div>
@@ -118,11 +101,26 @@
                 <div class="inner">
                     <div class="app-card-header p-4">
                         <div class="app-card-header-title">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h1 class="app-card-title">RMSE</h1>
-                                    <h1> <code><?= $data['pengujian']['rmse'] ?></code></h1>
-                                </div>
+
+                            <h1 class="app-card-title">RMSE</h1>
+                            <div class="table-responsive">
+
+                                <table class="table table-striped table-bordered datatable">
+                                    <thead>
+                                        <?php
+                                        for ($i = 1; $i <= 9; $i++) {
+                                            echo "<th>GOL$i</th>";
+                                        }
+                                        ?>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <?php foreach ($data['pengujian']['rmse'] as $key => $value) : ?>
+                                                <td><?= $value ?></td>
+                                            <?php endforeach; ?>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

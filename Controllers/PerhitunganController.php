@@ -44,13 +44,21 @@ class PerhitunganController
 
         $data['perhitungan'] = $this->perhitungan($data['items']);
         $data['prediksi'] = 0;
+        $data['periode'] = '';
+
         if (isset($_POST['submit'])) {
             $periode = $_POST['periode'];
-            // CONVERT DATE TO PERIODE
-            // $periode = date("m/Y", strtotime($periode));
-            // $periode = explode("/", $periode);
-            // $periode = $data['perhitungan']['n'] + 1;
-            $prediksi = $data['perhitungan']['a'] + $data['perhitungan']['b'] * $periode;
+            // jadikan periode sebagai x
+            $x = date("m/Y", strtotime($periode));
+
+            // prediksi untuk y1 sampai y9
+            $prediksi = [];
+            for ($i = 1; $i <= 9; $i++) {
+                $a = $data['perhitungan']['y' . $i]['a'];
+                $b = $data['perhitungan']['y' . $i]['b'];
+                $prediksi['y' . $i] = $a + $b * $data['perhitungan']['dataset'][$x]['x'];
+            }
+
             $data['prediksi'] = $prediksi;
             $data['periode'] = $periode;
         }
@@ -91,70 +99,101 @@ class PerhitunganController
                 $dataset[$bulan_tahun] = array(
                     'bulan_tahun' => $bulan_tahun,
                     'periode' => $index,
-                    'y' => $item['y'],
+                    'y1' => $item['y1'],
+                    'y2' => $item['y2'],
+                    'y3' => $item['y3'],
+                    'y4' => $item['y4'],
+                    'y5' => $item['y5'],
+                    'y6' => $item['y6'],
+                    'y7' => $item['y7'],
+                    'y8' => $item['y8'],
+                    'y9' => $item['y9'],
                     'x' => $index,
                     'x_kuadrat' => pow($index, 2),
-                    'xy' => $index * $item['y']
-
+                    'xy1' => $index * $item['y1'],
+                    'xy2' => $index * $item['y2'],
+                    'xy3' => $index * $item['y3'],
+                    'xy4' => $index * $item['y4'],
+                    'xy5' => $index * $item['y5'],
+                    'xy6' => $index * $item['y6'],
+                    'xy7' => $index * $item['y7'],
+                    'xy8' => $index * $item['y8'],
+                    'xy9' => $index * $item['y9']
                 );
                 $index++;
             } else {
-                $dataset[$bulan_tahun]['y'] += $item['y'];
-                $dataset[$bulan_tahun]['xy'] = $dataset[$bulan_tahun]['x'] * $dataset[$bulan_tahun]['y'];
+                for ($i = 1; $i <= 9; $i++) {
+                    $dataset[$bulan_tahun]['y' . $i] += $item['y' . $i];
+                    $dataset[$bulan_tahun]['xy' . $i] = $dataset[$bulan_tahun]['x'] * $dataset[$bulan_tahun]['y' . $i];
+                }
             }
         }
 
-
-        // Linear regression calculation
+        // Linear regression calculation for each y
         $n = count($dataset);
+        $results = array();
         $total_x = 0;
-        $total_y = 0;
-        $total_xy = 0;
         $total_x_kuadrat = 0;
 
         foreach ($dataset as $item) {
             $total_x += $item['periode'];
-            $total_y += $item['y'];
-            $total_xy += $item['xy'];
             $total_x_kuadrat += $item['x_kuadrat'];
         }
 
-        $denominator = $n * $total_x_kuadrat - $total_x * $total_x;
+        for ($i = 1; $i <= 9; $i++) {
+            $total_y = 0;
+            $total_xy = 0;
 
-        if ($denominator == 0) {
-            // Handle the error
-            throw new Exception("Error: Division by zero. Please check your input values.");
+            foreach ($dataset as $item) {
+                $total_y += $item['y' . $i];
+                $total_xy += $item['xy' . $i];
+            }
+
+            $denominator = $n * $total_x_kuadrat - $total_x * $total_x;
+
+            if ($denominator == 0) {
+                // Handle the error
+                throw new Exception("Error: Division by zero. Please check your input values.");
+            }
+
+            $b = ($n * $total_xy - $total_x * $total_y) / $denominator;
+            $a = ($total_y - $b * $total_x) / $n;
+
+            $results['y' . $i] = array(
+                'n' => $n,
+                'total_x' => $total_x,
+                'total_y' => $total_y,
+                'total_xy' => $total_xy,
+                'total_x_kuadrat' => $total_x_kuadrat,
+                'a' => $a,
+                'b' => $b
+            );
         }
 
-        $b = ($n * $total_xy - $total_x * $total_y) / $denominator;
-        $a = ($total_y - $b * $total_x) / $n;
+        $results['dataset'] = $dataset;
 
-        return array(
-            'n' => $n,
-            'total_x' => $total_x,
-            'total_y' => $total_y,
-            'total_xy' => $total_xy,
-            'total_x_kuadrat' => $total_x_kuadrat,
-            'a' => $a,
-            'b' => $b,
-            'dataset' => $dataset
-        );
+
+        return $results;
     }
+
 
     public function ProsesPengujian($percentageTest)
     {
         $perhitungan = $this->perhitungan($this->datasetModel->all());
         $dataset = $perhitungan['dataset'];
-        $a = $perhitungan['a'];
-        $b = $perhitungan['b'];
 
-        $dataTest = array();
-        $dataTrain = array();
+        // Initialize arrays for dataTrain, dataTest, predictions, actuals, and results for each y
+        $dataTest = [];
+        $dataTrain = [];
+        $predictions = [];
+        $actuals = [];
+        $results = [];
 
         $totalData = count($dataset);
         $totalDataTest = round($totalData * $percentageTest / 100);
         $totalDataTrain = $totalData - $totalDataTest;
 
+        // Split dataset into training and testing
         $index = 0;
         foreach ($dataset as $item) {
             if ($index < $totalDataTrain) {
@@ -165,47 +204,79 @@ class PerhitunganController
             $index++;
         }
 
-        // Pengujian Model
-        $predictions = array();
-        $actuals = array();
-        $results = array();
+        // Perform predictions for each y
+        for ($i = 1; $i <= 9; $i++) {
+            $a = $perhitungan['y' . $i]['a'];
+            $b = $perhitungan['y' . $i]['b'];
 
-        foreach ($dataTest as $item) {
-            $prediction = $a + $b * $item['periode'];
-            $actual = $item['y'];
+            $predictions['y' . $i] = [];
+            $actuals['y' . $i] = [];
+            $results['y' . $i] = [];
 
-            $predictions[] = $prediction;
-            $actuals[] = $actual;
+            foreach ($dataTest as $item) {
+                $prediction = $a + $b * $item['periode'];
+                $actual = $item['y' . $i];
 
-            // Menyimpan prediksi dan actual dalam array results
-            $results[] = array(
-                'periode' => $item['periode'],
-                'prediction' => $prediction,
-                'actual' => $actual
-            );
+                $predictions['y' . $i][] = $prediction;
+                $actuals['y' . $i][] = $actual;
+
+                // Store prediction and actual in results array
+                $results['y' . $i][] = [
+                    'periode' => $item['periode'],
+                    'prediction' => $prediction,
+                    'actual' => $actual
+                ];
+            }
         }
 
-        $rmse = $this->calculateRMSE($predictions, $actuals);
+        // Calculate RMSE for each y
+        $rmse = [];
+        for ($i = 1; $i <= 9; $i++) {
+            $rmse['y' . $i] = $this->calculateRMSE($predictions['y' . $i], $actuals['y' . $i]);
+        }
 
-        return array(
+        // Prepare HTML table to display results
+        $html = '<table class="table table-striped table-bordered datatable">';
+        $html .= '<thead><tr><th>Golongan</th><th>Periode</th><th>Prediction</th><th>Actual</th></tr></thead>';
+        $html .= '<tbody>';
+
+        foreach ($results as $y => $result) {
+            foreach ($result as $data) {
+                $html .= '<tr>';
+                $html .= '<td>' . $y . '</td>';
+                $html .= '<td>' . $data['periode'] . '</td>';
+                $html .= '<td>' . $data['prediction'] . '</td>';
+                $html .= '<td>' . $data['actual'] . '</td>';
+                $html .= '</tr>';
+            }
+        }
+
+        $html .= '</tbody>';
+        $html .= '</table>';
+
+        return [
             'dataTrain' => $dataTrain,
             'dataTest' => $dataTest,
-            'results' => $results,  // Mengembalikan hasil prediksi dan actual
+            'prediksi' => $html,  // Return HTML table of predictions and actuals
             'rmse' => $rmse
-        );
+        ];
     }
 
-    // Fungsi untuk menghitung RMSE
+    // Function to calculate RMSE remains unchanged
     private function calculateRMSE($predictions, $actuals)
     {
         $sumSquaredError = 0;
         $count = count($predictions);
 
+        if ($count !== count($actuals)) {
+            throw new Exception("Number of predictions does not match number of actuals.");
+        }
+
         for ($i = 0; $i < $count; $i++) {
             $sumSquaredError += pow($predictions[$i] - $actuals[$i], 2);
         }
 
-        if ($count == 0) {
+        if ($count === 0) {
             throw new Exception("Division by zero error in calculateRMSE method.");
         }
 

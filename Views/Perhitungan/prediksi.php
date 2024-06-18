@@ -18,7 +18,7 @@
                         <div class="mb-3">
                             <label for="periode" class="form-label">Periode</label>
                             <!-- <input type="month" class="form-control" id="periode" name="periode" required> -->
-                            <input type="number" class="form-control" id="periode" name="periode" required>
+                            <input type="date" class="form-control" id="periode" name="periode" required>
                         </div>
                         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -28,7 +28,7 @@
     </div>
 
     <?php if ($data['prediksi'] != 0) : ?>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="app-card shadow-sm mb-4 border-left-decoration">
                 <div class="inner">
                     <div class="app-card-header p-4">
@@ -41,13 +41,28 @@
                         </div>
                     </div>
                     <div class="app-card-body p-4">
-                        <code>
-                            Prediksi = <?= $data['prediksi'] ?> <br>
-                            Pembulatan = <?= round($data['prediksi']) ?>
-                        </code>
-                        <p>
-                            Jadi hasil prediksi untuk periode <?= $data['periode'] ?> adalah <?= round($data['prediksi']) ?>
-                        </p>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered datatable">
+                                <thead>
+                                    <tr>
+                                        <th width="2px">No</th>
+                                        <th>Bulan/Tahun</th>
+                                        <?php for ($i = 1; $i <= 9; $i++) : ?>
+                                            <th>GOL <?= $i ?></th>
+                                        <?php endfor; ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><?= $data['periode'] ?></td>
+                                        <?php for ($i = 1; $i <= 9; $i++) : ?>
+                                            <td><?= $data['prediksi']['y' . $i] ?></td>
+                                        <?php endfor; ?>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
