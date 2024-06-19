@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2024 at 06:47 AM
+-- Generation Time: Jun 19, 2024 at 05:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -687,6 +687,27 @@ INSERT INTO `dataset` (`id`, `x`, `y1`, `y2`, `y3`, `y4`, `y5`, `y6`, `y7`, `y8`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `riwayat_prediksi`
+--
+
+CREATE TABLE `riwayat_prediksi` (
+  `id` int(12) NOT NULL,
+  `periode_start` varchar(255) NOT NULL,
+  `periode_end` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `riwayat_prediksi`
+--
+
+INSERT INTO `riwayat_prediksi` (`id`, `periode_start`, `periode_end`) VALUES
+(7, '2024-01', '2024-02'),
+(8, '2024-01', '2024-10'),
+(9, '2024-06', '2024-06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -704,7 +725,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama`, `username`, `email`, `password`, `role`) VALUES
-(1, 'admin', 'admin', 'admin@gmail.com', '123', 'admin');
+(1, 'admin', 'admin', 'admin@gmail.com', '123', 'admin'),
+(2, 'ANGGA SAPUTRA', 'user', 'anggaegae@gmail.com', '123', 'user');
 
 --
 -- Indexes for dumped tables
@@ -714,6 +736,12 @@ INSERT INTO `users` (`id`, `nama`, `username`, `email`, `password`, `role`) VALU
 -- Indexes for table `dataset`
 --
 ALTER TABLE `dataset`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `riwayat_prediksi`
+--
+ALTER TABLE `riwayat_prediksi`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -733,10 +761,16 @@ ALTER TABLE `dataset`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=620;
 
 --
+-- AUTO_INCREMENT for table `riwayat_prediksi`
+--
+ALTER TABLE `riwayat_prediksi`
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

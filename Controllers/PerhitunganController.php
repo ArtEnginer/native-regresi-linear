@@ -1,5 +1,6 @@
 <?php
 include_once 'Models\DatasetModel.php';
+include_once 'Models\RiwayatPrediksiModel.php';
 require_once 'vendor/autoload.php';
 
 class PerhitunganController
@@ -17,6 +18,7 @@ class PerhitunganController
         }
         $koneksi = new Koneksi();
         $this->datasetModel = new DatasetModel($koneksi);
+        $this->riwayatPrediksiModel = new RiwayatPrediksiModel($koneksi);
     }
 
     public function index()
@@ -38,32 +40,88 @@ class PerhitunganController
         $data = [
             'title' => 'Prediksi',
             'active' => 'Prediksi',
+            'form' => 1,
             'items' => $this->datasetModel->all(),
             'content' => 'Views/Perhitungan/prediksi.php',
         ];
 
         $data['perhitungan'] = $this->perhitungan($data['items']);
-        $data['prediksi'] = 0;
+        $data['prediksi'] = [];
         $data['periode'] = '';
 
-        if (isset($_POST['submit'])) {
-            $periode = $_POST['periode'];
-            // jadikan periode sebagai x
-            $x = date("m/Y", strtotime($periode));
+        // if get
+        if (isset($_GET['periode_start']) && isset($_GET['periode_end'])) {
+            $periode_start = $_GET['periode_start'];
+            $periode_end = $_GET['periode_end'];
+            $data['form'] = 0;
+        }
 
-            // prediksi untuk y1 sampai y9
-            $prediksi = [];
-            for ($i = 1; $i <= 9; $i++) {
-                $a = $data['perhitungan']['y' . $i]['a'];
-                $b = $data['perhitungan']['y' . $i]['b'];
-                $prediksi['y' . $i] = $a + $b * $data['perhitungan']['dataset'][$x]['x'];
+        if (isset($_POST['submit'])) {
+            $periode_start = $_POST['periode_start'];
+            $periode_end = $_POST['periode_end'];
+        }
+
+        if (isset($_POST['submit']) || isset($_GET['periode_start']) && isset($_GET['periode_end'])) {
+
+            // cek apakah periode sudah pernah di prediksi jik iya jangan simpan kembali
+            $riwayat = $this->riwayatPrediksiModel->all();
+            foreach ($riwayat as $item) {
+                if ($item['periode_start'] == $periode_start && $item['periode_end'] == $periode_end) {
+                    $data['prediksi'] = 'Periode ' . $periode_start . ' sampai ' . $periode_end . ' sudah pernah di prediksi sebelumnya';
+                    break;
+                }
+            }
+            if ($data['prediksi'] == []) {
+                $this->riwayatPrediksiModel->add([
+                    'periode_start' => $periode_start,
+                    'periode_end' => $periode_end
+                ]);
+            }
+            // Convert the periods to timestamps
+            $start_date = strtotime($periode_start);
+            $end_date = strtotime($periode_end);
+
+            // Initialize total prediction array
+            $total_prediksi = [];
+
+            // Loop through each month in the period range
+            while ($start_date <= $end_date) {
+                // Format the current month/year as x
+                $x = date("m/Y", $start_date);
+
+                // Prediksi untuk y1 sampai y9
+                $prediksi_bulan = [];
+                for ($i = 1; $i <= 9; $i++) {
+                    $a = $data['perhitungan']['y' . $i]['a'];
+                    $b = $data['perhitungan']['y' . $i]['b'];
+                    if (isset($data['perhitungan']['dataset'][$x])) {
+                        $prediksi_bulan['y' . $i] = $a + $b * $data['perhitungan']['dataset'][$x]['x'];
+                    } else {
+                        $prediksi_bulan['y' . $i] = 0; // or handle as needed if dataset for $x is missing
+                    }
+                }
+
+                // Add monthly prediction to total prediction
+                foreach ($prediksi_bulan as $key => $value) {
+                    if (!isset($total_prediksi[$key])) {
+                        $total_prediksi[$key] = 0;
+                    }
+                    $total_prediksi[$key] += $value;
+                }
+
+                // Move to the next month
+                $start_date = strtotime("+1 month", $start_date);
             }
 
-            $data['prediksi'] = $prediksi;
-            $data['periode'] = $periode;
+            $data['prediksi'] = $total_prediksi;
+            $data['periode'] = $periode_start . ' sampai ' . $periode_end;
+
+            // die(var_dump($data['prediksi']));
         }
+
         include_once('Views/Layout/index.php');
     }
+
 
     public function pengujian()
     {
@@ -282,5 +340,38 @@ class PerhitunganController
 
         $meanSquaredError = $sumSquaredError / $count;
         return sqrt($meanSquaredError);
+    }
+
+    public function hasil()
+    {
+        $data = [
+            'title' => 'Hasil Prediksi',
+            'active' => 'hasil',
+            'items' => $this->riwayatPrediksiModel->all(),
+            'content' => 'Views/Hasil/index.php',
+        ];
+
+        include_once('Views/Layout/index.php');
+    }
+
+    // detail
+    public function detail($id)
+    {
+        $data = [
+            'title' => 'Detail Prediksi',
+            'active' => 'hasil',
+            'item' => $this->riwayatPrediksiModel->find($id),
+            'content' => 'Views/Hasil/detail.php',
+        ];
+
+        include_once('Views/Layout/index.php');
+    }
+
+    /* DELETE */
+    public function deletehasil()
+    {
+        $id = $_GET['id'];
+        $this->riwayatPrediksiModel->delete($id);
+        header('Location: ' . base_url() . 'perhitungan/hasil');
     }
 }

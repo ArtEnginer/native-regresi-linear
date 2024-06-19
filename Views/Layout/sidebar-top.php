@@ -12,6 +12,8 @@
                 <span class="nav-link-text">Dashboard</span>
             </a>
         </li>
+    <?php endif ?>
+    <?php if ($_SESSION['user']['role'] == 'admin') : ?>
 
 
         <li class="nav-item">
@@ -67,6 +69,23 @@
             </a>
         </li>
     <?php endif; ?>
+    <!-- hasil -->
+    <?php if ($_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'user') : ?>
+
+        <li class="nav-item">
+            <a class="nav-link <?= $data['active'] == 'hasil' ? 'active' : '' ?>" href="<?= base_url() ?>perhitungan/hasil">
+                <span class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-bar-graph" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 1.5h11a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5z" />
+                        <path d="M4 8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8z" />
+                        <path d="M9 3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3z" />
+                    </svg>
+                </span>
+                <span class="nav-link-text">Hasil Prediksi</span>
+            </a>
+        </li>
+    <?php endif ?>
+
     <?php if ($_SESSION['user']['role'] == 'admin') : ?>
 
         <li class="nav-item">
