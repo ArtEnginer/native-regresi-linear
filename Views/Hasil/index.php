@@ -42,9 +42,11 @@
                                             <button type="submit" class="btn btn-sm btn-primary rounded-pill shadow text-white">
                                                 <i class="fa fa-eye"></i>
                                             </button>
-                                            <a href="<?= base_url() ?>perhitungan/deletehasil?id=<?= $itm['id'] ?>" class="btn btn-sm btn-danger rounded-pill shadow text-white">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
+                                            <?php if ($_SESSION['user']['role'] == 'admin') : ?>
+                                                <a href="<?= base_url() ?>perhitungan/deletehasil?id=<?= $itm['id'] ?>" class="btn btn-sm btn-danger rounded-pill shadow text-white">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            <?php endif ?>
                                         </form>
                                     </td>
                                 </tr>

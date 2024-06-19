@@ -29,6 +29,8 @@
                 <span class="nav-link-text">Dataset</span>
             </a>
         </li>
+    <?php endif ?>
+    <?php if ($_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'user') : ?>
 
         <li class="nav-item">
             <a class="nav-link <?= $data['active'] == 'perhitungan' ? 'active' : '' ?>" href="<?= base_url() ?>perhitungan/index">
@@ -42,7 +44,8 @@
                 <span class="nav-link-text">Perhitungan</span>
             </a>
         </li>
-
+    <?php endif; ?>
+    <?php if ($_SESSION['user']['role'] == 'admin') : ?>
         <li class="nav-item">
             <a class="nav-link <?= $data['active'] == 'Prediksi' ? 'active' : '' ?>" href="<?= base_url() ?>perhitungan/prediksi">
                 <span class="nav-icon">
@@ -55,7 +58,6 @@
                 <span class="nav-link-text">Forecaseting</span>
             </a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link <?= $data['active'] == 'pengujian' ? 'active' : '' ?>" href="<?= base_url() ?>perhitungan/pengujian">
                 <span class="nav-icon">

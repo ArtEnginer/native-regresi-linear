@@ -35,7 +35,7 @@
                     <a class="app-logo" href="#!">
                         <img src="<?= base_url() . '/assets/images/logo.png' ?>" alt="logo" width="100">
 
-                        <span class="logo-text">Forecasting</span></a>
+                        <!-- <span class="logo-text">Forecasting</span></a> -->
 
                 </div>
                 <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1 mt-3">
