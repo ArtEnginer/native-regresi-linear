@@ -53,6 +53,16 @@
     <div class="app-wrapper">
         <div class="app-content pt-3 p-md-3 p-lg-4">
             <div class="container-xl">
+                <?php if (isset($_SESSION['error'])) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= $_SESSION['error'] ?>
+                    </div> <?php unset($_SESSION['error']);
+                        endif; ?>
+                <?php if (isset($_SESSION['success'])) : ?>
+                    <div class="alert alert-success" role="alert">
+                        <?= $_SESSION['success'] ?>
+                    </div> <?php unset($_SESSION['success']);
+                        endif; ?>
                 <?php include_once($data['content']); ?>
             </div>
         </div>

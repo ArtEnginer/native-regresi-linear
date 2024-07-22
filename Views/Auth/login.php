@@ -82,6 +82,11 @@
         <!-- logo image -->
         <img src="<?= base_url() . '/assets/images/logo.png' ?>" alt="logo" width="100">
         <h2>Login</h2>
+        <?php if (isset($_SESSION['error'])) : ?>
+            <div class="alert alert-danger" role="alert">
+                <?= $_SESSION['error'] ?>
+            </div> <?php unset($_SESSION['error']);
+                endif; ?>
         <form action="" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br><br>

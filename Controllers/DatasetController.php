@@ -59,6 +59,7 @@ class DatasetController
         ];
 
         $this->datasetModel->add($data);
+        $_SESSION['success'] = 'Data berhasil disimpan';
 
         header('location: ' . base_url() . 'dataset/index');
     }
@@ -67,7 +68,7 @@ class DatasetController
     {
         $id = $_GET['id'];
         $this->datasetModel->delete($id);
-
+        $_SESSION['success'] = 'Data berhasil dihapus';
         header('location: ' . base_url() . 'dataset/index');
     }
 
@@ -80,6 +81,7 @@ class DatasetController
             'item' => $this->datasetModel->show($id),
             'content' => 'Views/Dataset/edit.php',
         ];
+
 
         include_once('Views/Layout/index.php');
     }
@@ -101,7 +103,7 @@ class DatasetController
         ];
 
         $this->datasetModel->update($data);
-
+        $_SESSION['success'] = 'Data berhasil diupdate';
         header('location: ' . base_url() . 'dataset/index');
     }
 

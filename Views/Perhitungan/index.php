@@ -276,8 +276,9 @@
                             <thead>
                                 <tr>
                                     <th>y</th>
-                                    <th>a = (Σy * Σx^2 - Σx * Σxy) / (n * Σx^2 - Σx^2) =</th>
-                                    <th>b = (n * Σxy - Σx * Σy) / (n * Σx^2 - Σx^2) =</th>
+                                    <th>a = (Σy * Σx^2 - Σx * Σxy) / (n * (∑x2)–(∑x)²) =</th>
+                                    <th>b = (n * Σxy - Σx * Σy) / (n * (∑x2)–(∑x)²) =</th>
+
                                 </tr>
                             </thead>
                             <tbody>
